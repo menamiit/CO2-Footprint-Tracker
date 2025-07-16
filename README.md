@@ -1,4 +1,4 @@
-<img width="714" height="806" alt="image" src="https://github.com/user-attachments/assets/eb65c69c-5cdb-4751-bff5-1141d82470cc" />Carbon Footprint Tracker (WIP)
+Carbon Footprint Tracker (WIP)
 🌱 A React + Node/Express web app to help users track and reduce their carbon emissions.
 
 Overview
