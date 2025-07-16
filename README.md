@@ -1,12 +1,36 @@
-# React + Vite
+Carbon Footprint Tracker (WIP)
+🌱 A React + Node/Express web app to help users track and reduce their carbon emissions.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Overview
+This is a work-in-progress application that will allow users to:
 
-Currently, two official plugins are available:
+Log daily activities (transportation, energy use, diet, etc.)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Calculate estimated carbon footprint
 
-## Expanding the ESLint configuration
+View insights and trends over time
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Get personalized tips to reduce emissions
+
+Tech Stack (Planned)
+Frontend: React (with Vite)
+
+Backend: Node.js + Express (to be added)
+
+Database: MongoDB (for user data & emission logs)
+
+Current Status
+🚧 Under active development - basic frontend structure in progress.
+
+Future Goals
+User authentication
+
+Data visualization (charts/graphs)
+
+Carbon offset suggestions
+
+Social sharing features
+
+Contributions & suggestions welcome!
+
+(Last updated: ${new Date().toISOString().split('T')[0]})
