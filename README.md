@@ -1,36 +1,30 @@
-Carbon Footprint Tracker (WIP)
-🌱 A React + Node/Express web app to help users track and reduce their carbon emissions.
+# 🌱 Carbon Footprint Tracker (WIP)
 
-Overview
-This is a work-in-progress application that will allow users to:
+**Hey there!** 👋 This is my work-in-progress app to help people understand and reduce their carbon footprint. Still early days, but excited to build this out!
 
-Log daily activities (transportation, energy use, diet, etc.)
+## What's Cooking? 🍳
+Currently working on:
+- ✅ Basic React frontend (using Vite)
+- 🚧 Setting up Node/Express backend
+- 🔜 MongoDB for storing user activities
+- 🔜 Carbon calculation logic
 
-Calculate estimated carbon footprint
+## Features Coming Soon™
+*(if all goes according to plan)*
+- 📱 Activity logging (transport, food, energy)
+- 📊 Personal footprint dashboard
+- 🌟 Tips to reduce emissions
+- 📈 Progress tracking over time
+- 🔌 Integration with carbon APIs
 
-View insights and trends over time
+## Tech Stack
+**Frontend:**  
+⚛️ React + Vite  
+🎨 Tailwind CSS (considering)  
 
-Get personalized tips to reduce emissions
+**Backend:**  
+🖥️ Node.js/Express  
+🍃 MongoDB (Mongoose)   
 
-Tech Stack (Planned)
-Frontend: React (with Vite)
 
-Backend: Node.js + Express (to be added)
-
-Database: MongoDB (for user data & emission logs)
-
-Current Status
-🚧 Under active development - basic frontend structure in progress.
-
-Future Goals
-User authentication
-
-Data visualization (charts/graphs)
-
-Carbon offset suggestions
-
-Social sharing features
-
-Contributions & suggestions welcome!
-
-(Last updated: ${new Date().toISOString().split('T')[0]})
+---
