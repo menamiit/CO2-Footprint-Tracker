@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import Login from './Components/Login.jsx'
 import App from './App.jsx'
+import ActivityLogger from './Components/ActivityLogger.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/' element={<App />} />
+        <Route path='/Analyze' element={<ActivityLogger />} />
       </Routes>
     </BrowserRouter >
   </StrictMode>
