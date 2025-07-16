@@ -1,13 +1,18 @@
 import React from 'react'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import Header from './Components/header.jsx'
-import ReadingContent from './Components/ReadingContent.jsx'
+import Login from './Components/Login.jsx'
+import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Header />
-    <ReadingContent />
-  </StrictMode>,
+    <BrowserRouter>
+      <Routes>
+        <Route path='/login' element={<Login />} />
+        <Route path='/' element={<App />} />
+      </Routes>
+    </BrowserRouter >
+  </StrictMode>
 )
