@@ -1,6 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+    const navigate = useNavigate();
+    const handleClick = ()=> {
+        navigate('/Analyze');
+    }
+
     return (
         <div className="bg-[#2d3b3e] flex flex-col md:flex-row text-white min-h-[300px] items-center p-8">
             <div className="flex-1">
@@ -13,7 +19,7 @@ function Header() {
                     Change the Future.
                 </p>
                 <div className="mt-8">
-                    <button className="px-6 py-3 text-base bg-white text-black rounded hover:bg-gray-200 transition">
+                    <button className="px-6 py-3 text-base bg-white text-black rounded hover:bg-gray-200 transition cursor-pointer" onClick={handleClick}>
                         Track Your CO2 FOOTPRINT
                     </button>
                 </div>
