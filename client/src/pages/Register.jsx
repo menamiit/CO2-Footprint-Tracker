@@ -13,9 +13,9 @@ const UserRegister = () => {
     const handleSubmit = async (e)=> {
         e.preventDefault();
         try{
-            await registerUser(form);
+            const res = await registerUser(form);
             alert("User Registered Successfully");
-            console.log("User Registered Successfully");
+            console.log("User registered successfully ", res.data);
         } catch (err) {
             console.error(err);
             alert("Registration failed");
@@ -38,6 +38,10 @@ const UserRegister = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="space-y-6">
                         <div>
+                        <div>
+                            <label className="text-slate-900 text-sm font-medium mb-2 block">Username</label>
+                            <input name="username" type="text" className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter username" onChange={handleChange}/>
+                        </div>
                             <label className="text-slate-900 text-sm font-medium mb-2 block">Email Id</label>
                             <input name="email" type="text" className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter email" onChange={handleChange}/>
                         </div>
@@ -45,14 +49,10 @@ const UserRegister = () => {
                             <label className="text-slate-900 text-sm font-medium mb-2 block">Password</label>
                             <input name="password" type="password" className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter password" onChange={handleChange}/>
                         </div>
-                        <div>
-                            <label className="text-slate-900 text-sm font-medium mb-2 block">Confirm Password</label>
-                            <input name="cpassword" type="password" className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500" placeholder="Enter confirm password" onChange={handleChange}/>
-                        </div>
                     </div>
 
                     <div className="mt-12">
-                        <button type="button" className="w-full py-3 px-4 text-sm tracking-wider font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none cursor-pointer">
+                        <button type="submit" className="w-full py-3 px-4 text-sm tracking-wider font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none cursor-pointer">
                             Create an account
                         </button>
                     </div>

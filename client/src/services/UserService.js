@@ -1,12 +1,9 @@
-// src/services/UserService.js
+import axios from 'axios';
+import { data } from 'react-router-dom';
 
-export const registerUser = async (userData) => {
-  console.log("Mock register:", userData);
-  return Promise.resolve({ message: "Mock register success" });
-};
+const API = axios.create({
+  baseURL: "http://localhost:5000/api/auth"
+})
 
-export const loginUser = async (credentials) => {
-  console.log("Mock login:", credentials);
-  // Simulate a fake token
-  return Promise.resolve({ data: { token: "mock-token-12345" } });
-};
+export const registerUser = (data)=> API.post('/register', data);
+export const loginUser = (data)=> API.post('/login', data);
