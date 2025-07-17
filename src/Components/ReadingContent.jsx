@@ -20,7 +20,7 @@ const ReadingContent = () => {
                 </p>
                 <img 
                     className="rounded-lg shadow max-w-xl w-full h- mx-auto mt-4" 
-                    src="../images/per-capita-co-emissions.png" 
+                    src="src\assets\per-capita-co-emissions.png" 
                     alt="Per capita CO2 emissions"
                 />
             </div>

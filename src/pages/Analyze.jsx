@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 const ActivityLogger = () => {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
     return (
         <div className="mx-38">
             <form>
@@ -11,10 +13,11 @@ const ActivityLogger = () => {
                     <button
                         id="dropdown-button"
                         type="button"
+                        onClick={() => setDropdownOpen((prev) => !prev)}
                         className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-e-0 border-gray-300 dark:border-gray-700 dark:text-white rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
                     >
                         All categories
-                        <svg
+                        <svg    
                             className="w-2.5 h-2.5 ms-2.5"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +35,7 @@ const ActivityLogger = () => {
                     </button>
                     <div
                         id="dropdown"
-                        className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700"
+                        className={`z-10 ${dropdownOpen ? "" : "hidden"} bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700`}
                     >
                         <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
                             <li>
