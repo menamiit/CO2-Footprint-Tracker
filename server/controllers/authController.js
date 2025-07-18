@@ -6,13 +6,13 @@ const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPass = await bcrypt.hash(password, salt);
+    // const salt = await bcrypt.genSalt(10);
+    // const hashedPass = await bcrypt.hash(password, salt);
 
     const newUser = new User({
       username,
       email,
-      password: hashedPass,
+      password: password,
     });
 
     await newUser.save();
@@ -41,7 +41,7 @@ const loginUser = async (req, res) => {
         {expiresIn: '1h'}
     );
 
-    res.status(200).json({ token, email: user.email });
+    res.status(200).json({ token, email: user.email, password: user.password });
 
   } catch (error) {
     res.status(500).json({ message: "Login failed", error: error.message });
