@@ -13,7 +13,7 @@ userSchema.pre("save", async function(next) {
         this.password = await bcrypt.hash(this.password, 8);
         next();
     } catch (error) {
-        next(err);
+        next(error);
     }
 })
 
