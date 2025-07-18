@@ -14,8 +14,7 @@ const UserRegister = () => {
         e.preventDefault();
         try{
             const res = await registerUser(form);
-            alert("User Registered Successfully");
-            console.log("User registered successfully ", res.data);
+            navigate('/login');
         } catch (err) {
             console.error(err);
             alert("Registration failed");
@@ -52,11 +51,11 @@ const UserRegister = () => {
                     </div>
 
                     <div className="mt-12">
-                        <button type="submit" className="w-full py-3 px-4 text-sm tracking-wider font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none cursor-pointer">
+                        <button type="submit" className="w-full py-3 px-4 text-sm tracking-wider font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none cursor-pointer cursor-pointer">
                             Create an account
                         </button>
                     </div>
-                    <p className="text-slate-600 text-sm mt-6 text-center">Already have an account? <button  className="text-blue-600 font-medium hover:underline ml-1" onClick={handleClick}>Login here</button></p>
+                    <p className="text-slate-600 text-sm mt-6 text-center">Already have an account? <button  className="text-blue-600 font-medium hover:underline ml-1 cursor-pointer" onClick={handleClick}>Login here</button></p>
                 </form>
             </div>
         </div>

@@ -15,7 +15,7 @@ const Login = () => {
         try {
             const res = await loginUser(credentials);
             localStorage.setItem("token", res.data.token);
-            navigate('/dashboard');
+            navigate('/');
         } catch (error) {
             console.log(error);
             alert("Login failed");
@@ -58,14 +58,14 @@ const Login = () => {
                         />
                     </div>
 
-                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors">
+                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors cursor-pointer">
                         Sign In
                     </button>
                 </form>
 
                 <div className="mt-6 text-center text-sm text-gray-600">
                     Don't have an account?
-                    <button className="text-indigo-600 hover:text-indigo-500 font-medium" onClick={handleClick}>Sign up</button>
+                    <button className="text-indigo-600 hover:text-indigo-500 font-medium cursor-pointer" onClick={handleClick}>Sign up</button>
                 </div>
             </div>
         </div>
