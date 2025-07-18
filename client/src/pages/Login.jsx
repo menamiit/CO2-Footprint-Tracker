@@ -15,7 +15,7 @@ const Login = () => {
         try {
             const res = await loginUser(credentials);
             localStorage.setItem("token", res.data.token);
-            alert("Logged In");
+            navigate('/dashboard');
         } catch (error) {
             console.log(error);
             alert("Login failed");
@@ -38,9 +38,11 @@ const Login = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                         <input
                             type="email"
+                            name="email"
+                            value={credentials.email}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                             placeholder="your@email.com"
-                                
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -48,20 +50,22 @@ const Login = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
                         <input
                             type="password"
+                            name="password"
+                            value={credentials.password}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                             placeholder="••••••••"
                             onChange={handleChange}
                         />
                     </div>
 
-                    <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors" onClick={handleClick}>
+                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors">
                         Sign In
                     </button>
                 </form>
 
                 <div className="mt-6 text-center text-sm text-gray-600">
                     Don't have an account?
-                    <button className="text-indigo-600 hover:text-indigo-500 font-medium">Sign up</button>
+                    <button className="text-indigo-600 hover:text-indigo-500 font-medium" onClick={handleClick}>Sign up</button>
                 </div>
             </div>
         </div>
