@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Leaf, Car, Bus, Plane, Bolt, Beef } from 'lucide-react';
+import { Leaf, Car, Bus, Plane, Bolt, Beef, Lightbulb } from 'lucide-react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const months = [
   "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12"
 ];
 
-const AnimatedCounter = ({ value }) => {
+const AnimatedCounter = ({ value, colorClass }) => {
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
@@ -17,9 +18,54 @@ const AnimatedCounter = ({ value }) => {
   }, [value]);
 
   return (
-    <span className="font-bold text-5xl md:text-6xl text-green-500 transition-all duration-500">
+    <span className={`font-bold text-5xl md:text-6xl ${colorClass} transition-colors duration-500`}>
       {displayValue.toFixed(2)}
     </span>
+  );
+};
+
+const PersonalizedSuggestions = ({ emissions }) => {
+  const suggestions = {
+    transport: {
+      title: "Focus on Your Commute",
+      tip: "Your travel habits are a major contributor. Try carpooling, using public transport more often, or cycling for short trips to make a big difference.",
+      icon: <Car className="w-6 h-6 text-blue-500" />
+    },
+    flight: {
+      title: "Rethink Air Travel",
+      tip: "Flights have a significant impact. Consider high-speed trains for shorter distances or combine multiple trips into one to reduce your flight frequency.",
+      icon: <Plane className="w-6 h-6 text-purple-500" />
+    },
+    electricity: {
+      title: "Optimize Home Energy",
+      tip: "Your electricity usage is high. Switch to LED bulbs, unplug electronics when not in use, and consider a smart thermostat to cut down on energy waste.",
+      icon: <Bolt className="w-6 h-6 text-yellow-500" />
+    },
+    redMeat: {
+      title: "Adjust Your Diet",
+      tip: "Red meat has a high carbon footprint. Try incorporating more plant-based meals into your week or swapping beef for chicken to reduce your impact.",
+      icon: <Beef className="w-6 h-6 text-red-500" />
+    }
+  };
+
+  // Find the category with the highest emission
+  const highestEmitter = Object.keys(emissions).reduce((a, b) => emissions[a] > emissions[b] ? a : b);
+  const suggestion = suggestions[highestEmitter];
+
+  return (
+    <div className="mt-6 text-left p-4 bg-red-50 border border-red-200 rounded-lg">
+      <h4 className="font-bold text-gray-800 flex items-center gap-2">
+        <Lightbulb className="w-5 h-5 text-yellow-500" />
+        Personalized Tip
+      </h4>
+      <div className="flex items-start gap-3 mt-2">
+        <div className="mt-1">{suggestion.icon}</div>
+        <div>
+          <p className="font-semibold text-gray-700">{suggestion.title}</p>
+          <p className="text-sm text-gray-600">{suggestion.tip}</p>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -51,6 +97,12 @@ const SliderInput = ({ label, value, onChange, min, max, unit }) => (
 );
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
   const [selectedMonth, setSelectedMonth] = useState(() => {
 
     const now = new Date();
@@ -66,9 +118,20 @@ const Dashboard = () => {
     car: 0.21, bus: 0.105, train: 0.041, flight: 0.25, electricity: 0.71, redMeat: 2.66,
   }), []);
 
+  const emissionsByCategory = useMemo(() => {
+    const daysInMonth = 30;
+    const weeksInMonth = 4;
+    return {
+      transport: (activities.car * emissionFactors.car + activities.bus * emissionFactors.bus + activities.train * emissionFactors.train) * daysInMonth,
+      flight: activities.flight * emissionFactors.flight,
+      electricity: activities.electricity * emissionFactors.electricity * daysInMonth,
+      redMeat: activities.redMeat * emissionFactors.redMeat * weeksInMonth,
+    };
+  }, [activities, emissionFactors]);
+
   const totalFootprint = useMemo(() => {
-    const daysInMonth = 30; // Approximation for simplicity
-    const weeksInMonth = 4; // Approximation for simplicity
+    const daysInMonth = 30;
+    const weeksInMonth = 4;
 
     // All calculations are converted to a monthly basis
     const transportEmissions = (activities.car + activities.bus + activities.train) * emissionFactors.car * daysInMonth;
@@ -143,9 +206,13 @@ const Dashboard = () => {
   return (
     <div className="bg-gray-50 min-h-screen font-sans text-gray-800 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-
         <header className="text-center mb-8 md:mb-12">
           <div className="flex justify-center items-center gap-3">
+            <button className="rounded-md bg-blue-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none active:bg-blue-700 hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2 fixed left-0 ml-10 "
+              type="button"
+              onClick={() => { handleNavigation('/') }}>
+              Home
+            </button>
             <Leaf className="w-10 h-10 text-green-500" />
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
               CO<sub className="text-2xl">2</sub> Footprint Calculator
@@ -191,7 +258,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-              {/* ----------------Fooprint Card from here-------------------- */}
+          {/* ----------------Fooprint Card from here-------------------- */}
 
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-8 text-center">
@@ -227,6 +294,7 @@ const Dashboard = () => {
                 <h4 className="font-semibold text-gray-700 mb-2">What this means:</h4>
                 <p>This is an estimate of the greenhouse gases produced by your activities this month. The average monthly footprint varies globally, but every small reduction helps!</p>
               </div>
+              {totalFootprint > 400 && <PersonalizedSuggestions emissions={emissionsByCategory} />}
             </div>
           </div>
         </div>

@@ -22,7 +22,7 @@ function Header() {
             <div className="absolute top-0 left-0 p-4 md:p-6">
                 <button
                     onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-gray-700 hover:bg-gray-600 rounded-lg transition"
+                    className="cursor-pointer flex items-center gap-2 px-3 py-2 text-sm font-medium bg-gray-700 hover:bg-gray-600 rounded-lg transition"
                 >
                     ☰ Menu
                 </button>
