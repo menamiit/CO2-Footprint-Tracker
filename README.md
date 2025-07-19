@@ -8,11 +8,12 @@ Currently working on:
 - 🚧 Setting up Node/Express backend
 - 🔜 MongoDB for storing user activities
 - 🔜 Carbon calculation logic
+- 📱 Activity logging (transport, food, energy)
+- 📊 Personal footprint dashboard
 
 ## Features Coming Soon™
 *(if all goes according to plan)*
-- 📱 Activity logging (transport, food, energy)
-- 📊 Personal footprint dashboard
+
 - 🌟 Tips to reduce emissions
 - 📈 Progress tracking over time
 - 🔌 Integration with carbon APIs
