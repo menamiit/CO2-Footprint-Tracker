@@ -56,6 +56,12 @@ function Header() {
                         Profile
                     </li>
                     <li
+                        onClick={()=>handleNavigation("/Leaderboard")}
+                        className="p-4 hover:bg-gray-100 cursor-pointer"
+                    >
+                        Leaderboard
+                    </li>
+                    <li
                         onClick={handleLogout}
                         className="p-4 hover:bg-red-600 cursor-pointer hover:text-white text-red-400"
                     >
@@ -82,12 +88,18 @@ function Header() {
                     Cut Your Impact. <br />
                     Change the Future.
                 </p>
-                <div className="mt-8">
+                <div className="mt-8 flex flex-row sp">
                     <button
                         onClick={() => navigate("/Dashboard")}
-                        className="px-6 py-3 text-base bg-white text-black rounded hover:bg-gray-200 transition cursor-pointer"
+                        className="w-45 h-16 mr-10 px-6 py-3 text-lg bg-white text-black rounded hover:bg-gray-200 transition cursor-pointer"
                     >
-                        Track Your CO2 FOOTPRINT
+                        Dashboard
+                    </button>
+                    <button
+                        onClick={() => navigate("/Leaderboard")}
+                        className="w-45 h-16 px-6 py-3 text-lg bg-white text-black rounded hover:bg-gray-200 transition cursor-pointer"
+                    >
+                        Leaderboard
                     </button>
                 </div>
             </div>

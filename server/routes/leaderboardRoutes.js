@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Activity = require('../models/Activity');
 const User = require('../models/User');
+const verifyToken = require('../middleware/verifyToken');
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
   try {
-    const currentMonth = new Date().toISOString().slice(0, 7); // "2025-07"
+    const currentMonth = new Date().toISOString().slice(0, 7);
 
     const leaderboard = await Activity.aggregate([
       { $match: { month: currentMonth } },
@@ -30,8 +31,7 @@ router.get('/', async (req, res) => {
         $project: {
           _id: 0,
           userId: "$userDetails._id",
-          name: "$userDetails.name",
-          email: "$userDetails.email",
+          name: "$userDetails.username",
           totalFootprint: 1
         }
       }
