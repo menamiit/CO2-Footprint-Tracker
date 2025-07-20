@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Leaf, Car, Bus, Plane, Bolt, Beef, Lightbulb } from 'lucide-react';
+import { Leaf, Car, Bus, Plane, Bolt, Beef, Lightbulb, BarChartHorizontal } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -112,7 +112,7 @@ const Dashboard = () => {
   });
 
   const [activities, setActivities] = useState({
-    car: 0, bus: 0, train: 0, flight: 0, electricity: 5, redMeat: 0,
+    car: 0, bus: 0, train: 0, flight: 0, electricity: 0, redMeat: 0,
   });
 
   const [history, setHistory] = useState([]);
@@ -123,13 +123,11 @@ const Dashboard = () => {
   }), []);
 
   const emissionsByCategory = useMemo(() => {
-    const daysInMonth = 30;
-    const weeksInMonth = 4;
     return {
-      transport: (activities.car * emissionFactors.car + activities.bus * emissionFactors.bus + activities.train * emissionFactors.train) * daysInMonth,
+      transport: (activities.car * emissionFactors.car + activities.bus * emissionFactors.bus + activities.train * emissionFactors.train),
       flight: activities.flight * emissionFactors.flight,
-      electricity: activities.electricity * emissionFactors.electricity * daysInMonth,
-      redMeat: activities.redMeat * emissionFactors.redMeat * weeksInMonth,
+      electricity: activities.electricity * emissionFactors.electricity,
+      redMeat: activities.redMeat * emissionFactors.redMeat,
     };
   }, [activities, emissionFactors]);
 
@@ -147,7 +145,6 @@ const Dashboard = () => {
 
   const handleApiError = useCallback((error) => {
     console.error('API Error:', error);
-    // Handle both 401 and 403 errors by logging out
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
       logout();
     }
@@ -195,7 +192,7 @@ const Dashboard = () => {
       }
     };
     fetchHistory();
-  }, [logout, handleApiError]); // Fetch only once on mount, not on every activity change
+  }, [logout, handleApiError]);
 
   // Save activity to DB when activities change, with debouncing
   useEffect(() => {
@@ -213,7 +210,7 @@ const Dashboard = () => {
     }, 500); // Debounce for 500ms
 
     return () => clearTimeout(debounceSave);
-  }, [activities, totalFootprint, selectedMonth, handleApiError]); // Re-run when data changes
+  }, [activities, totalFootprint, selectedMonth, handleApiError]);
 
 
 
@@ -242,18 +239,21 @@ const Dashboard = () => {
               CO<sub className="text-2xl">2</sub> Footprint Calculator
             </h1>
           </div>
-          <div className="mt-4 flex justify-center">
-            <label className="mr-2 font-semibold">Select Month:</label>
+          <div className="mt-4 flex justify-center items-center space-x-2">
+            <label className="text-sm font-medium text-gray-700">
+              Select Month:
+            </label>
             <select
               value={selectedMonth}
               onChange={e => setSelectedMonth(e.target.value)}
-              className="border rounded px-2 py-1"
+              className="cursor-pointer text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
             >
               {months.map(m => (
                 <option key={m} value={m}>{m}</option>
               ))}
             </select>
           </div>
+
           <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
             See how your monthly activities impact the environment and learn how to make a difference.
           </p>
@@ -325,24 +325,22 @@ const Dashboard = () => {
 
         {/* ------------------- Activity History Table ------------------- */}
 
-        <div className="mt-8">
-          <h2 className="text-xl font-bold mb-2">Month Wise History</h2>
-          <table className="min-w-full bg-white rounded shadow">
-            <thead>
-              <tr>
-                <th className="px-4 py-2">Month</th>
-                <th className="px-4 py-2">Total Footprint (kg CO₂e)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.map((entry) => (
-                <tr key={entry.month}>
-                  <td className="border px-4 py-2">{entry.month}</td>
-                  <td className="border px-4 py-2">{entry.totalFootprint?.toFixed(2) ?? 0}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="mt-16">
+          <h2 className="text-3xl font-bold mb-6 text-center flex items-center justify-center gap-3"><BarChartHorizontal /> Month-wise History</h2>
+          <div className="bg-green-800/50 rounded-2xl shadow-lg p-6 ring-1 ring-white/10">
+            {history.length > 0 ? (
+              <div className="space-y-3">
+                {history.map((entry) => (
+                  <div key={entry.month} className="flex items-center justify-between p-4 bg-white rounded-lg hover:bg-gray-500/80 transition-colors">
+                    <span className="font-semibold text-gray-300">{new Date(entry.month).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })}</span>
+                    <span className="font-bold text-lg text-green-400">{entry.totalFootprint?.toFixed(2) ?? 0} kg CO₂e</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-gray-400 py-8">No past activity data available.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
