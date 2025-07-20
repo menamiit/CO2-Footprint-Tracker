@@ -38,10 +38,16 @@ function Header() {
                 </div>
                 <ul className="mt-4">
                     <li
-                        onClick={() => handleNavigation("/")}
+                        onClick={() => handleNavigation("/Profile")}
                         className="p-4 hover:bg-gray-100 cursor-pointer"
                     >
-                        Home
+                        Profile
+                    </li>
+                    <li
+                        onClick={() => handleNavigation("/analytics")}
+                        className="p-4 hover:bg-gray-100 cursor-pointer"
+                    >
+                        Analytics
                     </li>
                     <li
                         onClick={() => handleNavigation("/Dashboard")}
@@ -50,13 +56,7 @@ function Header() {
                         Dashboard
                     </li>
                     <li
-                        onClick={() => handleNavigation("/Profile")}
-                        className="p-4 hover:bg-gray-100 cursor-pointer"
-                    >
-                        Profile
-                    </li>
-                    <li
-                        onClick={()=>handleNavigation("/Leaderboard")}
+                        onClick={() => handleNavigation("/Leaderboard")}
                         className="p-4 hover:bg-gray-100 cursor-pointer"
                     >
                         Leaderboard

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Leaf, Car, Bus, Plane, Bolt, Beef, Lightbulb } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const months = [
   "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12"
@@ -98,6 +99,7 @@ const SliderInput = ({ label, value, onChange, min, max, unit }) => (
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -112,6 +114,8 @@ const Dashboard = () => {
   const [activities, setActivities] = useState({
     car: 0, bus: 0, train: 0, flight: 0, electricity: 5, redMeat: 0,
   });
+
+  const [history, setHistory] = useState([]);
 
 
   const emissionFactors = useMemo(() => ({
@@ -130,17 +134,9 @@ const Dashboard = () => {
   }, [activities, emissionFactors]);
 
   const totalFootprint = useMemo(() => {
-    const daysInMonth = 30;
-    const weeksInMonth = 4;
-
-    // All calculations are converted to a monthly basis
-    const transportEmissions = (activities.car + activities.bus + activities.train) * emissionFactors.car * daysInMonth;
-    const flightEmissions = activities.flight * emissionFactors.flight; // This is already a monthly value
-    const electricityEmissions = activities.electricity * emissionFactors.electricity * daysInMonth;
-    const redMeatEmissions = activities.redMeat * emissionFactors.redMeat * weeksInMonth;
-
-    return transportEmissions + flightEmissions + electricityEmissions + redMeatEmissions;
-  }, [activities, emissionFactors]);
+    // Correctly sum up the individual category emissions
+    return Object.values(emissionsByCategory).reduce((sum, value) => sum + value, 0);
+  }, [emissionsByCategory]);
 
   const handleInputChange = (key) => (e) => {
     setActivities(prev => ({
@@ -149,10 +145,18 @@ const Dashboard = () => {
     }));
   };
 
+  const handleApiError = useCallback((error) => {
+    console.error('API Error:', error);
+    // Handle both 401 and 403 errors by logging out
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      logout();
+    }
+  }, [logout]);
+
   // Fetch activity for selected month
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) return;
+    if (!token) { logout(); return; }
 
     const fetchActivities = async () => {
       try {
@@ -167,16 +171,36 @@ const Dashboard = () => {
           setActivities({ car: 0, bus: 0, train: 0, flight: 0, electricity: 5, redMeat: 0 });
         }
       } catch (error) {
-        console.error('Failed to fetch activity data:', error);
+        handleApiError(error);
       }
     };
 
     fetchActivities();
-  }, [selectedMonth]);
+  }, [selectedMonth, logout, handleApiError]);
+
+  // Fetch activity history
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) { logout(); return; }
+
+    const fetchHistory = async () => {
+      try {
+        // Use axios for consistency and error handling
+        const res = await axios.get('http://localhost:5000/api/activity/history', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setHistory(Array.isArray(res.data) ? res.data : []);
+      } catch (error) {
+        handleApiError(error);
+      }
+    };
+    fetchHistory();
+  }, [logout, handleApiError]); // Fetch only once on mount, not on every activity change
 
   // Save activity to DB when activities change, with debouncing
   useEffect(() => {
     const token = localStorage.getItem('token');
+    if (!token) return;
 
     const debounceSave = setTimeout(() => {
       axios.post('http://localhost:5000/api/activity', {
@@ -185,11 +209,11 @@ const Dashboard = () => {
         totalFootprint
       }, {
         headers: { Authorization: `Bearer ${token}` }
-      }).catch((err) => { console.log(err) });
+      }).catch(handleApiError);
     }, 500); // Debounce for 500ms
 
     return () => clearTimeout(debounceSave);
-  }, [activities, totalFootprint, selectedMonth]); // Re-run when data changes
+  }, [activities, totalFootprint, selectedMonth, handleApiError]); // Re-run when data changes
 
 
 
@@ -208,7 +232,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-8 md:mb-12">
           <div className="flex justify-center items-center gap-3">
-            <button className="rounded-md bg-blue-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none active:bg-blue-700 hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2 fixed left-0 ml-10 "
+            <button className="cursor-pointer rounded-md bg-black py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none active:bg-blue-700 hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2 fixed left-0 ml-10 "
               type="button"
               onClick={() => { handleNavigation('/') }}>
               Home
@@ -297,6 +321,28 @@ const Dashboard = () => {
               {totalFootprint > 400 && <PersonalizedSuggestions emissions={emissionsByCategory} />}
             </div>
           </div>
+        </div>
+
+        {/* ------------------- Activity History Table ------------------- */}
+
+        <div className="mt-8">
+          <h2 className="text-xl font-bold mb-2">Month Wise History</h2>
+          <table className="min-w-full bg-white rounded shadow">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">Month</th>
+                <th className="px-4 py-2">Total Footprint (kg CO₂e)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {history.map((entry) => (
+                <tr key={entry.month}>
+                  <td className="border px-4 py-2">{entry.month}</td>
+                  <td className="border px-4 py-2">{entry.totalFootprint?.toFixed(2) ?? 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

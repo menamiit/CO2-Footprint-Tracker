@@ -19,7 +19,7 @@ const registerUser = async (req, res) => {
     const newUser = new User({
       username,
       email,
-      password, // The pre-save hook will hash this
+      password,
     });
 
     await newUser.save();

@@ -71,6 +71,12 @@ function ProfilePage() {
 
     return (
         <div className="bg-gray-100 min-h-screen flex items-center justify-center p-4 font-sans">
+            <button
+                onClick={() => navigate('/')}
+                className="text-white cursor-pointer flex items-center gap-2 px-3 py-2 text-sm font-medium bg-black hover:bg-gray-400 rounded-lg transition fixed top-0 left-0 m-10"
+            >
+                🏠︎ Home
+            </button>
             <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
                 <div className="flex flex-col items-center text-center">
                     <div className="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center mb-4 border-4 border-white">
@@ -98,11 +104,10 @@ function ProfilePage() {
 
                 <div className="mt-8 text-center">
                     <button
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate('/analytics')}
                         className="cursor-pointer flex items-center justify-center gap-2 w-full px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                        <ArrowLeft size={18} />
-                        Back to Home
+                        Analytics
                     </button>
                 </div>
             </div>

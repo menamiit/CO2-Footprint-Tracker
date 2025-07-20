@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Trophy, ShieldCheck } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
 // --- NEW: Leaderboard Page ---
 function LeaderboardPage() {
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -37,6 +39,12 @@ function LeaderboardPage() {
 
     return (
         <div className="bg-white/60 min-h-screen font-sans p-4 sm:p-6 lg:p-8">
+            <button
+                onClick={() => navigate('/')}
+                className="text-white cursor-pointer flex items-center gap-2 px-3 py-2 text-sm font-medium bg-black hover:bg-gray-400 rounded-lg transition fixed top-0 left-0 m-10"
+            >
+                🏠︎ Home
+            </button>
             <div className="max-w-4xl mx-auto">
                 <header className="text-center mb-8 md:mb-12">
                     <div className="flex justify-center items-center gap-3">
