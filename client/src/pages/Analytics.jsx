@@ -4,6 +4,7 @@ import {
 } from 'recharts';
 import { TrendingUp, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 // Custom Tooltip for a more polished look
 const CustomTooltip = ({ active, payload, label }) => {
@@ -37,6 +38,7 @@ const NoDataState = () => (
 
 
 const FootGraph = () => {
+  const logout = useAuth();
   const navigate = useNavigate();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,6 +64,9 @@ const FootGraph = () => {
         setHistory(formatted);
       } catch (err) {
         console.error("Failed to fetch history:", err);
+        if (error.response && error.response.status === 401) {
+          logout();
+        }
       } finally {
         setLoading(false);
       }

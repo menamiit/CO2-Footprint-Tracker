@@ -25,33 +25,18 @@ const AnimatedCounter = ({ value, colorClass }) => {
   );
 };
 
-const PersonalizedSuggestions = ({ emissions }) => {
-  const suggestions = {
-    transport: {
-      title: "Focus on Your Commute",
-      tip: "Your travel habits are a major contributor. Try carpooling, using public transport more often, or cycling for short trips to make a big difference.",
-      icon: <Car className="w-6 h-6 text-blue-500" />
-    },
-    flight: {
-      title: "Rethink Air Travel",
-      tip: "Flights have a significant impact. Consider high-speed trains for shorter distances or combine multiple trips into one to reduce your flight frequency.",
-      icon: <Plane className="w-6 h-6 text-purple-500" />
-    },
-    electricity: {
-      title: "Optimize Home Energy",
-      tip: "Your electricity usage is high. Switch to LED bulbs, unplug electronics when not in use, and consider a smart thermostat to cut down on energy waste.",
-      icon: <Bolt className="w-6 h-6 text-yellow-500" />
-    },
-    redMeat: {
-      title: "Adjust Your Diet",
-      tip: "Red meat has a high carbon footprint. Try incorporating more plant-based meals into your week or swapping beef for chicken to reduce your impact.",
-      icon: <Beef className="w-6 h-6 text-red-500" />
-    }
-  };
+const suggestionIcons = {
+  transport: <Car className="w-6 h-6 text-blue-500" />,
+  flight: <Plane className="w-6 h-6 text-purple-500" />,
+  electricity: <Bolt className="w-6 h-6 text-yellow-500" />,
+  redMeat: <Beef className="w-6 h-6 text-red-500" />,
+  leaf: <Leaf className="w-6 h-6 text-green-500" />
+};
 
-  // Find the category with the highest emission
-  const highestEmitter = Object.keys(emissions).reduce((a, b) => emissions[a] > emissions[b] ? a : b);
-  const suggestion = suggestions[highestEmitter];
+const PersonalizedSuggestions = ({ suggestion }) => {
+  if (!suggestion || !suggestion.icon) {
+    return null;
+  }
 
   return (
     <div className="mt-6 text-left p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -60,7 +45,7 @@ const PersonalizedSuggestions = ({ emissions }) => {
         Personalized Tip
       </h4>
       <div className="flex items-start gap-3 mt-2">
-        <div className="mt-1">{suggestion.icon}</div>
+        <div className="mt-1">{suggestionIcons[suggestion.icon]}</div>
         <div>
           <p className="font-semibold text-gray-700">{suggestion.title}</p>
           <p className="text-sm text-gray-600">{suggestion.tip}</p>
@@ -116,6 +101,7 @@ const Dashboard = () => {
   });
 
   const [history, setHistory] = useState([]);
+  const [suggestion, setSuggestion] = useState(null);
 
 
   const emissionFactors = useMemo(() => ({
@@ -132,7 +118,6 @@ const Dashboard = () => {
   }, [activities, emissionFactors]);
 
   const totalFootprint = useMemo(() => {
-    // Correctly sum up the individual category emissions
     return Object.values(emissionsByCategory).reduce((sum, value) => sum + value, 0);
   }, [emissionsByCategory]);
 
@@ -192,7 +177,7 @@ const Dashboard = () => {
       }
     };
     fetchHistory();
-  }, [logout, handleApiError]);
+  }, [activities, totalFootprint, selectedMonth, logout, handleApiError]);
 
   // Save activity to DB when activities change, with debouncing
   useEffect(() => {
@@ -207,9 +192,39 @@ const Dashboard = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       }).catch(handleApiError);
-    }, 500); // Debounce for 500ms
+    }, 500);
 
     return () => clearTimeout(debounceSave);
+  }, [activities, totalFootprint, selectedMonth, handleApiError]);
+
+  // Fetch personalized suggestion
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const debounceSaveAndFetch = setTimeout(async () => {
+      try {
+        await axios.post('http://localhost:5000/api/activity', {
+          month: selectedMonth,
+          activities,
+          totalFootprint
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        // THEN fetch updated history
+        const res = await axios.get('http://localhost:5000/api/activity/history', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setHistory(Array.isArray(res.data) ? res.data : []);
+
+      } catch (error) {
+        handleApiError(error);
+      }
+    }, 300);
+
+    return () => clearTimeout(debounceSaveAndFetch);
   }, [activities, totalFootprint, selectedMonth, handleApiError]);
 
 
@@ -318,7 +333,7 @@ const Dashboard = () => {
                 <h4 className="font-semibold text-gray-700 mb-2">What this means:</h4>
                 <p>This is an estimate of the greenhouse gases produced by your activities this month. The average monthly footprint varies globally, but every small reduction helps!</p>
               </div>
-              {totalFootprint > 400 && <PersonalizedSuggestions emissions={emissionsByCategory} />}
+              {suggestion && <PersonalizedSuggestions suggestion={suggestion} />}
             </div>
           </div>
         </div>

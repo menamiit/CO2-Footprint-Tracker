@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const User = ({ className }) => (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -15,6 +16,7 @@ const ArrowLeft = ({ size = 18 }) => (
 );
 
 function ProfilePage() {
+    const { logout } = useAuth();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
@@ -35,6 +37,9 @@ function ProfilePage() {
             } catch (err) {
                 console.error("Failed to fetch Profile:", err);
                 setError("Could not load the User Profile. Please try again later.");
+                if (error.response && error.response.status === 401) {
+                    logout();
+                }
             }
         }
         getUser();

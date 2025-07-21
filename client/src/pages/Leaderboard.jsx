@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Trophy, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 
 // --- NEW: Leaderboard Page ---
 function LeaderboardPage() {
+    const { logout } = useAuth();
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -24,12 +26,14 @@ function LeaderboardPage() {
                 }
 
                 const data = await res.json();
-                console.log("Leaderboard API response:", data);
                 const users = Array.isArray(data) ? data : [];
                 setUsers(users);
             } catch (err) {
                 console.error("Failed to fetch leaderboard:", err);
                 setError("Could not load the leaderboard. Please try again later.");
+                if (error.response && error.response.status === 401) {
+                    logout();
+                }
             } finally {
                 setLoading(false);
             }
@@ -38,10 +42,10 @@ function LeaderboardPage() {
     }, []);
 
     return (
-        <div className="bg-white/60 min-h-screen font-sans p-4 sm:p-6 lg:p-8">
+        <div className="bg-gray-600 min-h-screen font-sans p-4 sm:p-6 lg:p-8">
             <button
                 onClick={() => navigate('/')}
-                className="text-white cursor-pointer flex items-center gap-2 px-3 py-2 text-sm font-medium bg-black hover:bg-gray-400 rounded-lg transition fixed top-0 left-0 m-10"
+                className="text-black cursor-pointer flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white hover:bg-gray-200 rounded-lg transition fixed top-0 left-0 m-10"
             >
                 🏠︎ Home
             </button>
@@ -49,7 +53,7 @@ function LeaderboardPage() {
                 <header className="text-center mb-8 md:mb-12">
                     <div className="flex justify-center items-center gap-3">
                         <Trophy className="w-10 h-10 text-yellow-500" />
-                        <h1 className="text-4xl md:text-5xl font-bold text-black">
+                        <h1 className="text-4xl md:text-5xl font-bold text-white">
                             Monthly Leaderboard
                         </h1>
                     </div>
@@ -58,7 +62,7 @@ function LeaderboardPage() {
                     </p>
                 </header>
 
-                <div className="bg-yellow-100 rounded-2xl shadow-lg overflow-hidden">
+                <div className="bg-green-100 rounded-2xl shadow-lg overflow-hidden">
                     {loading && <div className="p-8 text-center text-gray-500">Loading leaderboard...</div>}
                     {error && <div className="p-8 text-center text-red-500">{error}</div>}
                     {!loading && !error && Array.isArray(users) && users.length === 0 && (

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Menu, X, ArrowRight, BarChart2, LayoutDashboard, User, LogOut, TrendingUp, Leaf } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const ReadingContent = () => {
     return (
@@ -18,10 +17,10 @@ const ReadingContent = () => {
                             Every action we take contributes to our collective carbon footprint. By understanding your personal emissions, you gain the power to make informed, eco-friendly choices. Start your sustainability journey with us today and see the difference you can make.
                         </span>
                     </p>
-                    <div className="mt-8 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+                    <div className="bg-white dark:bg-gray-800 mt-8 p-6 rounded-2xl shadow-md">
                          <img 
                             className="rounded-lg w-full h-auto" 
-                            src="https://i.imgur.com/LOKwD59.png" // Using a static, clearer image
+                            src="https://www.siegwerk.com/fileadmin/_processed_/4/6/csm_SW_Carbon_footprint_88537f8f81.png"
                             alt="Per capita CO2 emissions chart"
                         />
                     </div>
@@ -58,7 +57,7 @@ const ReadingContent = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>  
     )
 }
 

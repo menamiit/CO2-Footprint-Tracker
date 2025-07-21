@@ -34,7 +34,7 @@ const Header = () => {
             <div className="absolute top-0 left-0 p-4 md:p-6 z-50">
                 <button
                     onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors duration-300"
+                    className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors duration-300 cursor-pointer"
                 >
                     <Menu size={24} />
                 </button>
@@ -47,7 +47,7 @@ const Header = () => {
                 <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 className="text-xl font-bold text-gray-800 dark:text-white">Navigation</h2>
                     <button onClick={() => setSidebarOpen(false)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <X size={24} className="text-gray-600 dark:text-gray-300" />
+                        <X size={24} className="cursor-pointer text-gray-600 dark:text-gray-300" />
                     </button>
                 </div>
                 <ul className="mt-4">
@@ -80,14 +80,14 @@ const Header = () => {
                     <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                         <button
                             onClick={() => navigate("/Dashboard")}
-                            className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-lg transition-transform transform hover:scale-105"
+                            className="cursor-pointer group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-lg transition-transform transform hover:scale-105"
                         >
                             Start Tracking
                             <ArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
                         </button>
                         <button
                             onClick={() => navigate("/Leaderboard")}
-                            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white/10 hover:bg-white/20 text-white rounded-lg transition"
+                            className="cursor-pointer inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white/10 hover:bg-white/20 text-white rounded-lg transition"
                         >
                             View Leaderboard
                         </button>

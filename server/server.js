@@ -5,6 +5,7 @@ const activityRoutes = require('./routes/activityRoutes');
 const leaderboardRoutes = require('./routes/leaderboardRoutes');
 const graphRoutes = require('./routes/graphRoutes');
 const userRoutes = require('./routes/userRoutes');
+const suggestionRoutes = require('./routes/suggestionRoutes');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -24,6 +25,7 @@ app.use('/api/activity', activityRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/history', graphRoutes);
+app.use('/api/suggestions', suggestionRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
